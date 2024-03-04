@@ -1,1 +1,17 @@
-
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Введіть масу тіла: ");
+        double mass = scanner.nextDouble();
+        System.out.print("Введіть швидкість тіла: ");
+        double velocity = scanner.nextDouble();
+        // Обчислення кінетичної енергії
+        double kineticEnergy = 0.5 * mass * velocity * velocity;
+        // Знаходження цілої частини кінетичної енергії
+        int integerPart = (int) kineticEnergy;
+        // Перетворення цілої частини в двійкову систему числення
+        String binaryRepresentation = Integer.toBinaryString(integerPart);
+        System.out.println("Кінетична енергія тіла: " + kineticEnergy);
+        System.out.println("Двійкове уявлення цілої частини кінетичної енергії: " + binaryRepresentation);
+    }
+}
