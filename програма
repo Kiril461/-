@@ -1,1 +1,103 @@
+import java.util.Scanner;
+
+/**
+ * Клас для обчислення кінетичної енергії та її відображення у вигляді текстової таблиці.
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Введіть масу тіла: ");
+        double mass = scanner.nextDouble();
+        System.out.print("Введіть швидкість тіла: ");
+        double velocity = scanner.nextDouble();
+
+        // Обчислення кінетичної енергії
+        double kineticEnergy = calculateKineticEnergy(mass, velocity);
+
+        // Знаходження цілої частини кінетичної енергії
+        int integerPart = (int) kineticEnergy;
+
+        // Перетворення цілої частини в двійкову систему числення
+        String binaryRepresentation = Integer.toBinaryString(integerPart);
+
+        // Виведення результатів
+        System.out.println("Кінетична енергія тіла: " + kineticEnergy);
+        System.out.println("Двійкове уявлення цілої частини кінетичної енергії: " + binaryRepresentation);
+
+        // Створення фабрики калькуляторів
+        KineticEnergyCalculatorFactory factory = new KineticEnergyCalculatorFactory();
+
+        // Створення калькулятора для розрахунку кінетичної енергії
+        KineticEnergyCalculator calculator = factory.createCalculator("simple");
+
+        // Обчислення кінетичної енергії з використанням калькулятора
+        double kineticEnergyWithCalculator = calculator.calculate(mass, velocity);
+
+        // Виведення результату
+        System.out.println("Кінетична енергія тіла (з використанням калькулятора): " + kineticEnergyWithCalculator);
+
+        // Відображення результатів у вигляді текстової таблиці
+        System.out.println("\nРезультати у вигляді текстової таблиці:");
+        displayResultsInTable(kineticEnergy, binaryRepresentation, kineticEnergyWithCalculator);
+    }
+
+    /**
+     * Метод для обчислення кінетичної енергії.
+     * @param mass маса тіла
+     * @param velocity швидкість тіла
+     * @return значення кінетичної енергії
+     */
+    public static double calculateKineticEnergy(double mass, double velocity) {
+        return 0.5 * mass * velocity * velocity;
+    }
+
+    /**
+     * Метод для відображення результатів у вигляді текстової таблиці.
+     * @param kineticEnergy кінетична енергія тіла
+     * @param binaryRepresentation двійкове уявлення цілої частини кінетичної енергії
+     * @param kineticEnergyWithCalculator кінетична енергія тіла з використанням калькулятора
+     */
+    public static void displayResultsInTable(double kineticEnergy, String binaryRepresentation, double kineticEnergyWithCalculator) {
+        System.out.println("+------------------------------------+");
+        System.out.println("|         Результати обчислень        |");
+        System.out.println("+------------------------------------+");
+        System.out.println("| Кінетична енергія тіла             | " + kineticEnergy);
+        System.out.println("| Двійкове уявлення цілої частини   | " + binaryRepresentation);
+        System.out.println("| кінетичної енергії                 |");
+        System.out.println("| Кінетична енергія тіла             | " + kineticEnergyWithCalculator);
+        System.out.println("| (з використанням калькулятора)     |");
+        System.out.println("+------------------------------------+");
+    }
+}
+
+/**
+ * Інтерфейс для обчислення кінетичної енергії.
+ */
+interface KineticEnergyCalculator {
+    double calculate(double mass, double velocity);
+}
+
+/**
+ * Клас для обчислення кінетичної енергії за простою формулою.
+ */
+class SimpleKineticEnergyCalculator implements KineticEnergyCalculator {
+    @Override
+    public double calculate(double mass, double velocity) {
+        return 0.5 * mass * velocity * velocity;
+    }
+}
+
+/**
+ * Фабрика для створення калькуляторів кінетичної енергії.
+ */
+class KineticEnergyCalculatorFactory {
+    public KineticEnergyCalculator createCalculator(String type) {
+        switch (type) {
+            case "simple":
+                return new SimpleKineticEnergyCalculator();
+            default:
+                throw new IllegalArgumentException("Невідомий тип калькулятора кінетичної енергії: " + type);
+        }
+    }
+}
 
