@@ -4,88 +4,39 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Введіть масу тіла: ");
-        double mass = scanner.nextDouble();
-        System.out.print("Введіть швидкість тіла: ");
-        double velocity = scanner.nextDouble();
+        CommandHistory history = new CommandHistory();
 
-        // Обчислення кінетичної енергії
-        double kineticEnergy = calculateKineticEnergy(mass, velocity);
+        while (true) {
+            System.out.println("Оберіть опцію:");
+            System.out.println("1. Обчислити кінетичну енергію");
+            System.out.println("2. Скасувати попередню операцію");
+            System.out.println("3. Вихід");
 
-        // Знаходження цілої частини кінетичної енергії
-        int integerPart = (int) kineticEnergy;
+            int option = scanner.nextInt();
+            switch (option) {
+                case 1:
+                    System.out.print("Введіть масу тіла: ");
+                    double mass = scanner.nextDouble();
+                    System.out.print("Введіть швидкість тіла: ");
+                    double velocity = scanner.nextDouble();
 
-        // Перетворення цілої частини в двійкову систему числення
-        String binaryRepresentation = Integer.toBinaryString(integerPart);
-
-        // Виведення результатів
-        System.out.println("Кінетична енергія тіла: " + kineticEnergy);
-        System.out.println("Двійкове уявлення цілої частини кінетичної енергії: " + binaryRepresentation);
-
-        // Збереження результатів у файлі або базі даних
-        // TODO: Реалізувати збереження
+                    KineticEnergyCalculationCommand calculationCommand = new KineticEnergyCalculationCommand(mass, velocity);
+                    calculationCommand.execute();
+                    history.push(calculationCommand);
+                    break;
+                case 2:
+                    UndoCommand undoCommand = new UndoCommand(history);
+                    undoCommand.execute();
+                    break;
+                case 3:
+                    System.exit(0); // Вихід з програми
+                default:
+                    System.out.println("Невірна опція. Спробуйте ще раз.");
+            }
+        }
     }
 
     public static double calculateKineticEnergy(double mass, double velocity) {
         return 0.5 * mass * velocity * velocity;
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        // Створення фабрики калькуляторів
-        KineticEnergyCalculatorFactory factory = new KineticEnergyCalculatorFactory();
-
-        // Створення калькулятора для розрахунку кінетичної енергії
-        KineticEnergyCalculator calculator = factory.createCalculator("simple");
-
-        // Введення маси тіла та його швидкості
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Введіть масу тіла: ");
-        double mass = scanner.nextDouble();
-        System.out.print("Введіть швидкість тіла: ");
-        double velocity = scanner.nextDouble();
-
-        // Обчислення кінетичної енергії
-        double kineticEnergy = calculator.calculate(mass, velocity);
-
-        // Виведення результату
-        System.out.println("Кінетична енергія тіла: " + kineticEnergy);
-    }
-}
-
-class KineticEnergyCalculatorFactory {
-    public KineticEnergyCalculator createCalculator(String type) {
-        switch (type) {
-            case "simple":
-                return new SimpleKineticEnergyCalculator(new TextResultDisplay());
-            case "modified":
-                return new ModifiedKineticEnergyCalculator(new TextResultDisplay());
-            default:
-                throw new IllegalArgumentException("Невідомий тип калькулятора кінетичної енергії: " + type);
-        }
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        // Створення фабрики калькуляторів
-        KineticEnergyCalculatorFactory factory = new SimpleKineticEnergyCalculatorFactory();
-
-        // Створення калькулятора для розрахунку кінетичної енергії
-        KineticEnergyCalculator calculator = factory.createCalculator("simple");
-
-        // Введення маси тіла та його швидкості
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Введіть масу тіла: ");
-        double mass = scanner.nextDouble();
-        System.out.print("Введіть швидкість тіла: ");
-        double velocity = scanner.nextDouble();
-
-        // Обчислення кінетичної енергії
-        double kineticEnergy = calculator.calculate(mass, velocity);
-
-        // Виведення результату
-        System.out.println("Кінетична енергія тіла: " + kineticEnergy);
     }
 }
