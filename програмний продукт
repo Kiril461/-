@@ -1,16 +1,22 @@
-
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
+        WorkerThread workerThread = new WorkerThread(taskQueue);
+        workerThread.start();
+
         CommandHistory history = new CommandHistory();
 
         while (true) {
             System.out.println("Оберіть опцію:");
             System.out.println("1. Обчислити кінетичну енергію");
             System.out.println("2. Скасувати попередню операцію");
-            System.out.println("3. Вихід");
+            System.out.println("3. Знайти мінімум зі списку");
+            System.out.println("4. Вихід");
 
             int option = scanner.nextInt();
             switch (option) {
@@ -21,14 +27,28 @@ public class Main {
                     double velocity = scanner.nextDouble();
 
                     KineticEnergyCalculationCommand calculationCommand = new KineticEnergyCalculationCommand(mass, velocity);
-                    calculationCommand.execute();
-                    history.push(calculationCommand);
+                    taskQueue.add(() -> {
+                        calculationCommand.execute();
+                        history.push(calculationCommand);
+                    });
                     break;
                 case 2:
-                    UndoCommand undoCommand = new UndoCommand(history);
-                    undoCommand.execute();
+                    taskQueue.add(() -> {
+                        UndoCommand undoCommand = new UndoCommand(history);
+                        undoCommand.execute();
+                    });
                     break;
                 case 3:
+                    // Приклад паралельної обробки елементів колекції (пошук мінімуму)
+                    // Уявімо, що тут ви виконуєте операції з колекцією для знаходження мінімуму
+                    // Можна викликати відповідні методи зі змінним списком аргументів, якщо потрібно
+                    taskQueue.add(() -> {
+                        double minimum = findMinimum();
+                        System.out.println("Мінімальний елемент: " + minimum);
+                    });
+                    break;
+                case 4:
+                    workerThread.doStop(); // Зупинити робочий потік перед виходом
                     System.exit(0); // Вихід з програми
                 default:
                     System.out.println("Невірна опція. Спробуйте ще раз.");
@@ -38,5 +58,17 @@ public class Main {
 
     public static double calculateKineticEnergy(double mass, double velocity) {
         return 0.5 * mass * velocity * velocity;
+    }
+
+    // Приклад методу для пошуку мінімуму в колекції (може бути замінений реальним методом)
+    public static double findMinimum() {
+        double[] array = {3.14, 2.71, 1.618, 42, 6.626e-34};
+        double min = array[0];
+        for (double value : array) {
+            if (value < min) {
+                min = value;
+            }
+        }
+        return min;
     }
 }
