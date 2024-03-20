@@ -100,4 +100,86 @@ class KineticEnergyCalculatorFactory {
         }
     }
 }
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Клас для виконання завдання з обробки колекції об'єктів та їх відображення у графічному вигляді.
+ */
+public class CollectionProcessing {
+    private List<Double> data;
+
+    public CollectionProcessing() {
+        this.data = new ArrayList<>();
+    }
+
+    /**
+     * Метод для додавання значення до колекції.
+     * @param value значення для додавання
+     */
+    public void addData(double value) {
+        data.add(value);
+    }
+
+    /**
+     * Метод для видалення значення з колекції за індексом.
+     * @param index індекс значення для видалення
+     */
+    public void removeData(int index) {
+        if (index >= 0 && index < data.size()) {
+            data.remove(index);
+        } else {
+            System.out.println("Неправильний індекс для видалення");
+        }
+    }
+
+    /**
+     * Метод для відображення результатів обробки колекції у графічному вигляді.
+     */
+    public void displayGraphicalResults() {
+        CollectionGraphicalDisplay display = new CollectionGraphicalDisplay(data);
+        display.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        CollectionProcessing processor = new CollectionProcessing();
+        Scanner scanner = new Scanner(System.in);
+
+        boolean isProcessing = true;
+        while (isProcessing) {
+            System.out.println("Меню:");
+            System.out.println("1. Додати значення до колекції");
+            System.out.println("2. Видалити значення з колекції");
+            System.out.println("3. Відобразити результати у графічному вигляді");
+            System.out.println("4. Вийти з програми");
+            System.out.print("Виберіть опцію: ");
+            int option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    System.out.print("Введіть значення для додавання: ");
+                    double valueToAdd = scanner.nextDouble();
+                    processor.addData(valueToAdd);
+                    break;
+                case 2:
+                    System.out.print("Введіть індекс значення для видалення: ");
+                    int indexToRemove = scanner.nextInt();
+                    processor.removeData(indexToRemove);
+                    break;
+                case 3:
+                    processor.displayGraphicalResults();
+                    break;
+                case 4:
+                    isProcessing = false;
+                    break;
+                default:
+                    System.out.println("Неправильний вибір опції");
+            }
+        }
+
+        scanner.close();
+    }
+}
+
 
